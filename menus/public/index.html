@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menús</title>
+</head>
+<body>
+    <h2>Añade un nuevo menú:</h2>
+    <form action="/api/nuevoMenu" method="post">
+        <input type="number" id="numero" name="numero" min="1" placeholder="Nº">
+        <input type="text" id="primerPlato" name="primerPlato" placeholder="primerPlato">
+        <input type="text" id="segundoPlato" name="segundoPlato" placeholder="segundoPlato">
+        <input type="text" id="postre" name="postre" placeholder="postre">
+        <input type="number" id="precio" name="precio" placeholder="precio" min="0">
+        <input type="submit" value="Guardar menú">
+    </form>
+
+    <h2>Modifica un menú:</h2>
+    <form>
+        <input type="number" id="modificaNumero" name="numero" min="1" placeholder="Nº">
+        <input type="text" id="modificaPrimerPlato" name="primerPlato" placeholder="primerPlato">
+        <input type="text" id="modificaSegundoPlato" name="segundoPlato" placeholder="segundoPlato">
+        <input type="text" id="modificaPostre" name="postre" placeholder="postre">
+        <input type="number" id="modificaPrecio" name="precio" placeholder="precio" min="0">
+        <button type="button" onclick="modificar()">Modificar menú</button>
+    </form>
+
+    <h2>Elimina un menú:</h2>
+    <form>
+        <input type="number" id="borrarNumero" name="numero" min="1" placeholder="Nº">
+        <button type="button" onclick="borrar()">Borrar menú</button>
+    </form>
+
+    <h2>Lista de menús:</h2>
+    <ul id="listado">
+
+    </ul>
+
+    <script>
+        function modificar() {
+            fetch('/api/editarMenu', {
+                method: "PUT"
+            })
+            .then((res) => res.json())
+            .then((datos) => {
+                console.log(datos)
+            })
+        }
+
+        function borrar() {
+            fetch('/api/borrarMenu', {
+                method: "DELETE"
+            })
+            .then((res) => res.json())
+            .then((datos) => {
+                console.log(datos)
+            })
+        }
+
+        fetch('api/menus')
+        .then((res) => res.json())
+        .then((datos) => { 
+            let salida = ""
+            datos.results.forEach(menu => {
+            salida += `<li>${menu.numero} <br> ${menu.primerPlato} <br> ${menu.segundoPlato} <br> ${menu.postre} <br> ${menu.precio} <br>
+                <button type="button">Borrar</button></li>`
+            });
+
+            document.getElementById('listado').innerHTML = salida
+        })
+
+    </script>
+</body>
+</html>
